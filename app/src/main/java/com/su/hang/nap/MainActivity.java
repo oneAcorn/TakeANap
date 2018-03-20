@@ -3,6 +3,7 @@ package com.su.hang.nap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private TextInputEditText testEt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,40 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        initUI();
+        test();
+    }
+
+    private void initUI() {
+        testEt = (TextInputEditText) findViewById(R.id.test_et);
+    }
+
+    private void test() {
+        String result = "";
+        if (!RealPhoneUtil.checkIsNotRealPhone()) {
+            result += "cpu检测成功";
+        } else {
+            result += "cpu检测失败";
+        }
+        result += "\n";
+        if (!RealPhoneUtil.isFeatures()) {
+            result += "设备信息检测成功";
+        } else {
+            result += "设备信息检测失败";
+        }
+        result += "\n";
+        if (!RealPhoneUtil.notHasLightSensorManager(this)) {
+            result += "光感检测成功";
+        } else {
+            result += "光感检测失败";
+        }
+        result += "\n";
+        if (!RealPhoneUtil.notHasBlueTooth()) {
+            result += "蓝牙检测成功";
+        } else {
+            result += "蓝牙检测失败";
+        }
+        testEt.setText(result);
     }
 
     @Override
