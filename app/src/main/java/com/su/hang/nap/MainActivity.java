@@ -1,5 +1,7 @@
 package com.su.hang.nap;
 
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         initUI();
         test();
+        test1();
     }
 
     private void initUI() {
@@ -75,6 +78,16 @@ public class MainActivity extends AppCompatActivity
         } else {
             result += "蓝牙检测失败";
         }
+        testEt.setText(result);
+    }
+
+    private void test1() {
+        String result = "";
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        result += "wifiInfo:" + wifiInfo.toString();
+        result+="\n";
+        result += "SSID:" + wifiInfo.getSSID();
         testEt.setText(result);
     }
 
