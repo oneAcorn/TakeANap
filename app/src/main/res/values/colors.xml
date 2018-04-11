@@ -3,4 +3,41 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="transparency">#00000000</color>
+    <color name="half_transparency_white">#58ffffff</color>
+    <!--主流的几个颜色-->
+    <color name="white">#ffffff</color>
+    <color name="main_text_color">#444444</color>
+    <color name="main_text_color_gray">#c2c2c2</color>
+    <color name="clickable_text_color">#98c2f5</color>
+    <color name="divide">#f6f6f6</color>
+    <color name="divide_line">#e1e1e1</color>
+    <color name="divide_line1">#999999</color>
+    <color name="peanut_blue">#2964a9</color>
+    <color name="peanut_bg_blue">#e2edf9</color>
+    <color name="peanut_green">#2cc66a</color>
+    <color name="peanut_orange">#ff7200</color>
+    <color name="peanut_orange1">#ff9458</color>
+    <color name="peanut_orange2">#ffc0a3</color>
+    <color name="peanut_orange3">#ffc1a3</color>
+    <color name="peanut_orange4">#66ff7200</color>
+    <color name="peanut_orange_deep">#cc5c00</color>
+    <color name="peanut_orange_shallow">#b66320</color>
+    <color name="peanut_pink">#50ff7200</color>
+    <color name="peanut_red">#e74747</color>
+    <!--主流的几个颜色-->
+    <color name="tag_blue">#94b1d4</color>
+    <color name="invest_title_gray">#698bbc</color>
+    <color name="user_explain_text">#83b0d4</color>
+    <!-- 轮子選擇器 -->
+    <color name="province_line_border">#C7C7C7</color>
+    <color name="wheelview_ok_bg">#f9f9f9</color>
+    <color name="wheelview_ok_text">#c90000</color>
+    <color name="wheelview_wheel_bg">#d2d6db</color>
+    <color name="wheelview_text">#444444</color>
+    <color name="wheelview_divider">#b0b4b9</color>
+    <!-- 轮子選擇器 -->
+    <color name="object_2_days_color">#b0b4b9</color>
+    <color name="object_7_days_color">#b0b4b9</color>
+    <color name="object_31_days_color">#b0b4b9</color>
 </resources>
