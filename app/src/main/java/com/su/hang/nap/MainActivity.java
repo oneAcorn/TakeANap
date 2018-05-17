@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import android.view.MenuItem;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -53,8 +56,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         initUI();
-        test();
-        test1();
+//        test();
+//        test1();
+        test2();
     }
 
     private void initUI() {
@@ -97,6 +101,13 @@ public class MainActivity extends AppCompatActivity
         result += "\n";
         result += "SSID:" + wifiInfo.getSSID();
         testEt.setText(result);
+    }
+
+    private void test2() {
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        List<ScanResult> listb = wifiManager.getScanResults();
+        List<WifiConfiguration> lista= wifiManager.getConfiguredNetworks();
+        testEt.setText(listb.toString()+"\n"+lista.toString());
     }
 
     @Override
