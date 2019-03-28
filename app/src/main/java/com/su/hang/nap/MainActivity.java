@@ -4,6 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -28,7 +32,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
     private TextInputEditText testEt;
 
     @Override
@@ -58,7 +62,8 @@ public class MainActivity extends AppCompatActivity
         initUI();
 //        test();
 //        test1();
-        test2();
+//        test2();
+        test3();
     }
 
     private void initUI() {
@@ -106,8 +111,40 @@ public class MainActivity extends AppCompatActivity
     private void test2() {
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         List<ScanResult> listb = wifiManager.getScanResults();
-        List<WifiConfiguration> lista= wifiManager.getConfiguredNetworks();
-        testEt.setText(listb.toString()+"\n"+lista.toString());
+        List<WifiConfiguration> lista = wifiManager.getConfiguredNetworks();
+        testEt.setText(listb.toString() + "\n" + lista.toString());
+    }
+
+    private void test3() {
+        SensorManager sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        Sensor mSensorAccelerometer = sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sManager.registerListener(this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+//        if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+            boolean is_gyroscope_exist;
+            float gyroscope_x=0f;
+            float gyroscope_y=0f;
+            float gyroscope_z=0f;
+            try {
+                 gyroscope_x = event.values[0];
+                 gyroscope_y = event.values[1];
+                 gyroscope_z = event.values[2];
+
+                is_gyroscope_exist = true;
+            } catch (Exception e) {
+                is_gyroscope_exist = false;
+            }
+            testEt.setText("xyz:"+gyroscope_x+","+gyroscope_y+","+gyroscope_z+",\n"+is_gyroscope_exist);
+//        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 
     @Override
@@ -177,7 +214,7 @@ public class MainActivity extends AppCompatActivity
         int uid = appInfo.uid;
 
         Class appOpsClass = null;
-      /* Context.APP_OPS_MANAGER */
+        /* Context.APP_OPS_MANAGER */
         try {
             appOpsClass = Class.forName(AppOpsManager.class.getName());
             Method checkOpNoThrowMethod = appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE,
