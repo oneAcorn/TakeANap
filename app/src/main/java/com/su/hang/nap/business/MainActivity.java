@@ -26,7 +26,10 @@ import com.su.hang.nap.bean.ParameterBean;
 import com.su.hang.nap.configure.ShareKeys;
 import com.su.hang.nap.util.RealPhoneUtil;
 import com.su.hang.nap.util.ShareObjUtil;
+import com.su.hang.nap.util.VibratorUtil;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends TTSActivity
@@ -36,11 +39,16 @@ public class MainActivity extends TTSActivity
     private EditText testEt2;
     private Button testBtn;
     private ParameterBean mParameterBean;
+    private SimpleDateFormat format;
+    private Date mDate;
+    private boolean stopThread = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
+        format = new SimpleDateFormat("HH:mm");
+        mDate = new Date();
         mParameterBean = (ParameterBean) ShareObjUtil.getObject(this, ShareKeys.PARAMETER_BEAN);
         initUI();
 //        test();
@@ -177,6 +185,32 @@ public class MainActivity extends TTSActivity
         return true;
     }
 
+    private void startCountDown() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (!stopThread) {
+                    try {
+                        Thread.sleep(1000);
+                        mDate.setTime(System.currentTimeMillis());
+                        String time = format.format(mDate);
+                        if (time.equals(mParameterBean.getTime())) {
+                            if (!TextUtils.isEmpty(mParameterBean.getTip())) {
+                                text2Speech(mParameterBean.getTip());
+                            }
+                            if (mParameterBean.getVibratorTime() != 0) {
+                                VibratorUtil.Vibrate(MainActivity.this, mParameterBean.getVibratorTime());
+                            }
+                            stopThread=true;
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
+
     /**
      * Handle button click events<br />
      * <br />
@@ -195,9 +229,11 @@ public class MainActivity extends TTSActivity
                     mParameterBean.setTip(testEt1.getText().toString());
                 }
                 if (!TextUtils.isEmpty(testEt2.getText().toString())) {
-                    mParameterBean.setVibratorTime(Integer.getInteger(testEt2.getText().toString()));
+                    mParameterBean.setVibratorTime(Integer.valueOf(testEt2.getText().toString()));
                 }
                 ShareObjUtil.saveObject(MainActivity.this, mParameterBean, ShareKeys.PARAMETER_BEAN);
+                stopThread = false;
+                startCountDown();
             }
         }
     }
