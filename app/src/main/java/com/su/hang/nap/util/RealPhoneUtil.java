@@ -1,4 +1,4 @@
-package com.su.hang.nap;
+package com.su.hang.nap.util;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;

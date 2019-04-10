@@ -1,4 +1,4 @@
-package com.su.hang.nap;
+package com.su.hang.nap.app;
 
 import android.app.Activity;
 import android.app.Application;
