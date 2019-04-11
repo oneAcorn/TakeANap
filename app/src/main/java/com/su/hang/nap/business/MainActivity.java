@@ -51,6 +51,7 @@ public class MainActivity extends TTSActivity
         mDate = new Date();
         mParameterBean = (ParameterBean) ShareObjUtil.getObject(this, ShareKeys.PARAMETER_BEAN);
         initUI();
+        refreshUI();
 //        test();
 //        test1();
 //        test2();
@@ -64,6 +65,14 @@ public class MainActivity extends TTSActivity
         testBtn = (Button) findViewById(R.id.test_btn);
 
         testBtn.setOnClickListener(this);
+    }
+
+    private void refreshUI() {
+        testEt.setText(mParameterBean.getTime());
+        if (!TextUtils.isEmpty(mParameterBean.getTip())) {
+            testEt1.setText(mParameterBean.getTip());
+        }
+        testEt2.setText(mParameterBean.getVibratorTime() + "");
     }
 
     private void test() {
@@ -201,7 +210,7 @@ public class MainActivity extends TTSActivity
                             if (mParameterBean.getVibratorTime() != 0) {
                                 VibratorUtil.Vibrate(MainActivity.this, mParameterBean.getVibratorTime());
                             }
-                            stopThread=true;
+                            stopThread = true;
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
