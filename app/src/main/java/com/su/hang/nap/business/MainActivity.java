@@ -198,7 +198,7 @@ public class MainActivity extends TTSActivity
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (!stopThread) {
+                while (!stopThread) {
                     try {
                         Thread.sleep(1000);
                         mDate.setTime(System.currentTimeMillis());
