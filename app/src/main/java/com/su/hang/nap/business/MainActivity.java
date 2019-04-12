@@ -10,20 +10,22 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.su.hang.nap.R;
 import com.su.hang.nap.base.TTSActivity;
 import com.su.hang.nap.bean.ParameterBean;
+import com.su.hang.nap.bean.PhoneNum;
 import com.su.hang.nap.configure.ShareKeys;
+import com.su.hang.nap.util.Logger;
+import com.su.hang.nap.util.PhoneNumUtil;
 import com.su.hang.nap.util.RealPhoneUtil;
 import com.su.hang.nap.util.ShareObjUtil;
 import com.su.hang.nap.util.VibratorUtil;
@@ -102,30 +104,6 @@ public class MainActivity extends TTSActivity
         }
         testEt.setText(result);
     }
-
-    private void test1() {
-        String result = "";
-        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        result += "wifiInfo:" + wifiInfo.toString();
-        result += "\n";
-        result += "SSID:" + wifiInfo.getSSID();
-        testEt.setText(result);
-    }
-
-    private void test2() {
-        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        List<ScanResult> listb = wifiManager.getScanResults();
-        List<WifiConfiguration> lista = wifiManager.getConfiguredNetworks();
-        testEt.setText(listb.toString() + "\n" + lista.toString());
-    }
-
-    private void test3() {
-        SensorManager sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        Sensor mSensorAccelerometer = sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sManager.registerListener(this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_UI);
-    }
-
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -220,6 +198,23 @@ public class MainActivity extends TTSActivity
         }).start();
     }
 
+    private void startAlarmClock() {
+        if (checkData()) {
+            mParameterBean = new ParameterBean();
+
+            mParameterBean.setTime(testEt.getText().toString());
+            if (!TextUtils.isEmpty(testEt1.getText().toString())) {
+                mParameterBean.setTip(testEt1.getText().toString());
+            }
+            if (!TextUtils.isEmpty(testEt2.getText().toString())) {
+                mParameterBean.setVibratorTime(Integer.valueOf(testEt2.getText().toString()));
+            }
+            ShareObjUtil.saveObject(MainActivity.this, mParameterBean, ShareKeys.PARAMETER_BEAN);
+            stopThread = false;
+            startCountDown();
+        }
+    }
+
     /**
      * Handle button click events<br />
      * <br />
@@ -229,21 +224,36 @@ public class MainActivity extends TTSActivity
     @Override
     public void onClick(View v) {
         if (v == testBtn) {
-            // Handle clicks for testBtn
-            if (checkData()) {
-                mParameterBean = new ParameterBean();
-
-                mParameterBean.setTime(testEt.getText().toString());
-                if (!TextUtils.isEmpty(testEt1.getText().toString())) {
-                    mParameterBean.setTip(testEt1.getText().toString());
-                }
-                if (!TextUtils.isEmpty(testEt2.getText().toString())) {
-                    mParameterBean.setVibratorTime(Integer.valueOf(testEt2.getText().toString()));
-                }
-                ShareObjUtil.saveObject(MainActivity.this, mParameterBean, ShareKeys.PARAMETER_BEAN);
-                stopThread = false;
-                startCountDown();
-            }
+          startAlarmClock();
+//            test4();
         }
+    }
+
+    private void test1() {
+        String result = "";
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        result += "wifiInfo:" + wifiInfo.toString();
+        result += "\n";
+        result += "SSID:" + wifiInfo.getSSID();
+        testEt.setText(result);
+    }
+
+    private void test2() {
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        List<ScanResult> listb = wifiManager.getScanResults();
+        List<WifiConfiguration> lista = wifiManager.getConfiguredNetworks();
+        testEt.setText(listb.toString() + "\n" + lista.toString());
+    }
+
+    private void test3() {
+        SensorManager sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        Sensor mSensorAccelerometer = sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sManager.registerListener(this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    private void test4() {
+        List<PhoneNum> list = PhoneNumUtil.getInstance().getPhoneNum(this);
+        Logger.d(list.toString());
     }
 }
