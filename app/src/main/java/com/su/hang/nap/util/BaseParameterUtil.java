@@ -1183,13 +1183,15 @@ public class BaseParameterUtil {
         Log.d("aaaaaaaa", "max : " + max + " current : " + current);
         return current;
     }
-    public float getCallColumeRate(Context context) {//获取通话音量
+
+    public float getMusicVolumeRate(Context context) {//获取通话音量
         AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL);//最大
-        int current = mAudioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL);//当前
+        int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);//最大
+        int current = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);//当前
         Log.d("aaaaaaaa", "max : " + max + " current : " + current);
-        return Float.valueOf(current)/Float.valueOf(max);
+        return Float.valueOf(current) / Float.valueOf(max);
     }
+
     public String getHeadPhoneStatus(Context context) {//获取耳机状态
         AudioManager localAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         localAudioManager.isWiredHeadsetOn();

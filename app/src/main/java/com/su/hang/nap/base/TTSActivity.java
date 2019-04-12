@@ -48,7 +48,8 @@ public class TTSActivity extends BaseActivity implements TextToSpeech.OnInitList
                 String.valueOf(AudioManager.STREAM_ALARM));
 //        Logger.d(BaseParameterUtil.getInstance().getCallColumeRate(this)+"");
         //音量
-        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_VOLUME,BaseParameterUtil.getInstance().getCallColumeRate(this)+"");
+        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_VOLUME,
+                BaseParameterUtil.getInstance().getMusicVolumeRate(this)+"");
         //语调
 //        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_PAN,"0");
         tts.speak(text,
