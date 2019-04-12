@@ -1,6 +1,7 @@
 package com.su.hang.nap.business;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -31,8 +32,12 @@ import com.su.hang.nap.util.ShareObjUtil;
 import com.su.hang.nap.util.VibratorUtil;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends TTSActivity
         implements SensorEventListener, View.OnClickListener {
@@ -43,7 +48,8 @@ public class MainActivity extends TTSActivity
     private ParameterBean mParameterBean;
     private SimpleDateFormat format;
     private Date mDate;
-    private boolean stopThread = false;
+    private ArrayList<String> timeList, tipList;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,29 +179,36 @@ public class MainActivity extends TTSActivity
     }
 
     private void startCountDown() {
-        new Thread(new Runnable() {
+        if (null != timer) {
+            timer.cancel();
+            timer = null;
+        }
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                while (!stopThread) {
-                    try {
-                        Thread.sleep(1000);
-                        mDate.setTime(System.currentTimeMillis());
-                        String time = format.format(mDate);
-                        if (time.equals(mParameterBean.getTime())) {
-                            if (!TextUtils.isEmpty(mParameterBean.getTip())) {
-                                text2Speech(mParameterBean.getTip());
-                            }
-                            if (mParameterBean.getVibratorTime() != 0) {
-                                VibratorUtil.Vibrate(MainActivity.this, mParameterBean.getVibratorTime());
-                            }
-                            stopThread = true;
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                mDate.setTime(System.currentTimeMillis());
+                String time = format.format(mDate);
+                if (null == timeList || timeList.size() <= 0) {
+                    timer.cancel();
+                    return;
+                }
+                if (null == tipList || tipList.size() <= 0) {
+                    timer.cancel();
+                    return;
+                }
+                if (time.equals(timeList.get(0))) {
+                    if (!TextUtils.isEmpty(tipList.get(0))) {
+                        text2Speech(tipList.get(0));
                     }
+                    if (mParameterBean.getVibratorTime() != 0) {
+                        VibratorUtil.Vibrate(MainActivity.this, mParameterBean.getVibratorTime());
+                    }
+                    tipList.remove(0);
+                    timeList.remove(0);
                 }
             }
-        }).start();
+        }, 0, 1000);
     }
 
     private void startAlarmClock() {
@@ -210,7 +223,10 @@ public class MainActivity extends TTSActivity
                 mParameterBean.setVibratorTime(Integer.valueOf(testEt2.getText().toString()));
             }
             ShareObjUtil.saveObject(MainActivity.this, mParameterBean, ShareKeys.PARAMETER_BEAN);
-            stopThread = false;
+            tipList = new ArrayList<>();
+            timeList = new ArrayList<>();
+            timeList.addAll(Arrays.asList(mParameterBean.getTime().split(";")));
+            tipList.addAll(Arrays.asList(mParameterBean.getTip().split(";")));
             startCountDown();
         }
     }
@@ -224,7 +240,7 @@ public class MainActivity extends TTSActivity
     @Override
     public void onClick(View v) {
         if (v == testBtn) {
-          startAlarmClock();
+            startAlarmClock();
 //            test4();
         }
     }
