@@ -4,6 +4,9 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 
+import com.su.hang.nap.util.BaseParameterUtil;
+import com.su.hang.nap.util.Logger;
+
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -22,6 +25,7 @@ public class TTSActivity extends BaseActivity implements TextToSpeech.OnInitList
 
     private void initTTS() {
         tts = new TextToSpeech(this, this); // 参数Context,TextToSpeech.OnInitListener
+        tts.setPitch(0.0f);// 设置音调，值越大声音越尖（女生），值越小则变成男声,1.0是常规
     }
 
     protected void text2Speech(String text) {
@@ -39,10 +43,14 @@ public class TTSActivity extends BaseActivity implements TextToSpeech.OnInitList
                 return;
             }
         }
-        tts.setPitch(0.0f);// 设置音调，值越大声音越尖（女生），值越小则变成男声,1.0是常规
         HashMap<String, String> myHashAlarm = new HashMap();
         myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
                 String.valueOf(AudioManager.STREAM_ALARM));
+//        Logger.d(BaseParameterUtil.getInstance().getCallColumeRate(this)+"");
+        //音量
+        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_VOLUME,BaseParameterUtil.getInstance().getCallColumeRate(this)+"");
+        //语调
+//        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_PAN,"0");
         tts.speak(text,
                 TextToSpeech.QUEUE_FLUSH, myHashAlarm);
     }
