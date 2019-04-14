@@ -34,7 +34,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends TTSActivity {
-    private SeekBar mSeekBar;//
+    private SeekBar mSeekBar;
     private EditText et;
     private TextView timeSpaceTv;
     private EditText speakTimesEt;
