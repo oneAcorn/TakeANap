@@ -7,12 +7,13 @@ import android.widget.Toast;
 
 import com.su.hang.nap.business.MainActivity;
 
+import org.greenrobot.eventbus.EventBus;
+
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        intent = new Intent(context, MainActivity.class);
-        context.startActivity(intent);
-
-        Toast.makeText(context,".onReceive.........",Toast.LENGTH_LONG).show();
+//        intent = new Intent(context, MainActivity.class);
+//        context.startActivity(intent);
+        EventBus.getDefault().post("...");
     }
 }
