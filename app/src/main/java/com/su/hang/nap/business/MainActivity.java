@@ -64,7 +64,7 @@ public class MainActivity extends TTSActivity {
     public void onEvent(String whatever) {
         if (null != alarmBean && System.currentTimeMillis() > endStamp) {
             cancelAlarm(null);
-            addAlarm(alarmBean,1);
+            addAlarm(alarmBean, 1);
             return;
         }
         text2Speech(TextUtils.isEmpty(alarmTip) ? et.getText().toString() : alarmTip);
@@ -157,7 +157,10 @@ public class MainActivity extends TTSActivity {
 //        intent.putExtras(bundle);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
         Calendar calendar = Calendar.getInstance();
-        long startMillis=getTimeStamp(bean.getTimeStart(), delayDay);
+        long startMillis = getTimeStamp(bean.getTimeStart(), delayDay);
+        if (startMillis < System.currentTimeMillis()) {
+            startMillis = getTimeStamp(bean.getTimeStart(), delayDay + 1);
+        }
         calendar.setTimeInMillis(startMillis);
         this.endStamp = getTimeStamp(alarmBean.getTimeEnd(), delayDay);
 //        calendar.add(Calendar.SECOND, sec);
