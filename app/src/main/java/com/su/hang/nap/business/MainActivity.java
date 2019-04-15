@@ -76,14 +76,6 @@ public class MainActivity extends TTSActivity {
         super.onInit(status);
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-//        text2Speech(TextUtils.isEmpty(alarmTip) ? et.getText().toString() : alarmTip);
-//        Toast.makeText(this,".onNewIntent.........",Toast.LENGTH_LONG).show();
-    }
-
-
     public void setAlarm(View view) {
         ensureAlarmBean();
         addAlarm(alarmBean, 0);
@@ -162,7 +154,11 @@ public class MainActivity extends TTSActivity {
             startMillis = getTimeStamp(bean.getTimeStart(), delayDay + 1);
         }
         calendar.setTimeInMillis(startMillis);
-        this.endStamp = getTimeStamp(alarmBean.getTimeEnd(), delayDay);
+        long endMillis = getTimeStamp(alarmBean.getTimeEnd(), delayDay);
+        if (endMillis < startMillis) {
+            endMillis = getTimeStamp(alarmBean.getTimeEnd(), delayDay + 1);
+        }
+        this.endStamp = endMillis;
 //        calendar.add(Calendar.SECOND, sec);
         //注册新提醒
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -170,7 +166,7 @@ public class MainActivity extends TTSActivity {
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), bean.getIntervalMinutes() * 60 * 1000, pendingIntent);
 
         Toast.makeText(this, "设置成功", Toast.LENGTH_LONG).show();
-        statusTv.setText(statusTv.getText().toString() + ",设置到 " + getTimeFromStamp(startMillis));
+        statusTv.setText(statusTv.getText().toString() + ",设置从 " + getTimeFromStamp(startMillis) + " 到 " + getTimeFromStamp(endMillis));
     }
 
     private void initUI(ParameterBean mParameterBean) {
