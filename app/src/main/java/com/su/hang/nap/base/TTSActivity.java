@@ -1,6 +1,7 @@
 package com.su.hang.nap.base;
 
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 
@@ -43,17 +44,26 @@ public class TTSActivity extends BaseActivity implements TextToSpeech.OnInitList
                 return;
             }
         }
-        HashMap<String, String> myHashAlarm = new HashMap();
-        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
-                String.valueOf(AudioManager.STREAM_ALARM));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Bundle bundle = new Bundle();
+            bundle.putInt(TextToSpeech.Engine.KEY_PARAM_STREAM, AudioManager.STREAM_ALARM);
+            bundle.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, BaseParameterUtil.getInstance().getMusicVolumeRate(this));
+            tts.speak(text,
+                    TextToSpeech.QUEUE_FLUSH, bundle, "");
+        } else {
+            HashMap<String, String> myHashAlarm = new HashMap();
+            myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+                    String.valueOf(AudioManager.STREAM_ALARM));
 //        Logger.d(BaseParameterUtil.getInstance().getCallColumeRate(this)+"");
-        //音量
-        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_VOLUME,
-                BaseParameterUtil.getInstance().getMusicVolumeRate(this)+"");
-        //语调
+            //音量
+            myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_VOLUME,
+                    BaseParameterUtil.getInstance().getMusicVolumeRate(this) + "");
+            //语调
 //        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_PAN,"0");
-        tts.speak(text,
-                TextToSpeech.QUEUE_FLUSH, myHashAlarm);
+            tts.speak(text,
+                    TextToSpeech.QUEUE_FLUSH, myHashAlarm);
+        }
     }
 
     @Override
